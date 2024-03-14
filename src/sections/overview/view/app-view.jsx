@@ -4,15 +4,15 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
-import Iconify from 'src/components/iconify';
+// import Iconify from 'src/components/iconify';
 
 // import AppTasks from '../app-tasks';
 import AppNewsUpdate from '../app-news-update';
 import AppOrderTimeline from '../app-order-timeline';
 // import AppCurrentVisits from '../app-current-visits';
 import AppWebsiteVisits from '../app-website-visits';
-import AppWidgetSummary from '../app-widget-summary';
-import AppTrafficBySite from '../app-traffic-by-site';
+// import AppWidgetSummary from '../app-widget-summary';
+// import AppTrafficBySite from '../app-traffic-by-site';
 // import AppCurrentSubject from '../app-current-subject';
 // import AppConversionRates from '../app-conversion-rates';
 
@@ -26,14 +26,14 @@ export default function AppView() {
       </Typography>
 
       <Grid container spacing={2}>
-        <Grid xs={12} sm={6} md={3}>
+        {/* <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
             title="Weekly Sales"
             total={714000}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
           />
-        </Grid>
+        </Grid> */}
 
         {/* <Grid xs={12} sm={6} md={3}> 
           <AppWidgetSummary
@@ -62,10 +62,10 @@ export default function AppView() {
           />
         </Grid>
  */}
-        <Grid xs={12} md={6} lg={8}>
+        <Grid xs={12} md={6} lg={12}>
           <AppWebsiteVisits
-            title="Website Visits"
-            subheader="(+43%) than last year"
+            title="Budget Analysis"
+            subheader="(+%) than last year"
             chart={{
               labels: [
                 '01/01/2003',
@@ -82,22 +82,28 @@ export default function AppView() {
               ],
               series: [
                 {
-                  name: 'Team A',
+                  name: 'Saving',
                   type: 'column',
                   fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
+                  data: [
+                    23000, 11000, 20200, 27000, 13000, 22000, 37000, 20100, 44000, 22000, 30000,
+                  ],
                 },
                 {
-                  name: 'Team B',
+                  name: 'Spending',
                   type: 'area',
                   fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
+                  data: [
+                    44000, 5050, 40100, 60700, 20200, 40300, 20010, 40010, 50006, 27000, 40003,
+                  ],
                 },
                 {
-                  name: 'Team C',
+                  name: 'Credit ',
                   type: 'line',
                   fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+                  data: [
+                    30000, 20050, 30060, 30000, 40050, 30050, 60004, 50002, 50009, 30006, 39000,
+                  ],
                 },
               ],
             }}
@@ -155,11 +161,11 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppNewsUpdate
-            title="News Update"
+            title="National Bank Update"
             list={[...Array(5)].map((_, index) => ({
               id: faker.string.uuid(),
-              title: faker.person.jobTitle(),
-              description: faker.commerce.productDescription(),
+              title: faker.finance.accountName(),
+              description: faker.finance.transactionDescription(),
               image: `/assets/images/covers/cover_${index + 1}.jpg`,
               postedAt: faker.date.recent(),
             }))}
@@ -172,11 +178,11 @@ export default function AppView() {
             list={[...Array(5)].map((_, index) => ({
               id: faker.string.uuid(),
               title: [
-                '1983, orders, $4220',
+                'Sent ₹4220 to Acc.' + faker.finance.accountNumber(8),
                 '12 Invoices have been paid',
-                'Order #37745 from September',
-                'New order placed #XF-2356',
-                'New order placed #XF-2346',
+                'Recieved ₹3271 From Acc.' + faker.finance.accountNumber(8),
+                'Recieved ₹21271 From Acc.' + faker.finance.accountNumber(8),
+                'Sent ₹56231 to Acc.' + faker.finance.accountNumber(8),
               ][index],
               type: `order${index + 1}`,
               time: faker.date.past(),
@@ -184,7 +190,7 @@ export default function AppView() {
           />
         </Grid>
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AppTrafficBySite
             title="Traffic by Site"
             list={[
@@ -210,7 +216,7 @@ export default function AppView() {
               },
             ]}
           />
-        </Grid>
+        </Grid> */}
 
         {/* <Grid xs={12} md={6} lg={8}>
           <AppTasks
