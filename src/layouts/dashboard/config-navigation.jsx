@@ -13,6 +13,16 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
+    title: 'Aadhaar',
+    path: '/blog',
+    icon: icon('ic_user'),
+  },
+  {
+    title: 'PAN',
+    path: '/user',
+    icon: icon('ic_user'),
+  },
+  {
     title: 'login',
     path: '/login',
     icon: icon('ic_lock'),

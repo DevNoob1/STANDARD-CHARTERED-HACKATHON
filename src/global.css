@@ -1,2 +1,11 @@
 /* scrollbar */
 @import 'simplebar-react/dist/simplebar.min.css';
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}

@@ -1,174 +1,201 @@
-import { useState } from 'react';
-
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Table from '@mui/material/Table';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
+import Grid from '@mui/material/Grid';
+import './style.css';
 
-import { users } from 'src/_mock/user';
+export default function BlogView() {
+  const [isAnimated, setIsAnimated] = useState(false);
 
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
+  useEffect(() => {
+    setIsAnimated(true);
+  }, []);
 
-import TableNoData from '../table-no-data';
-import UserTableRow from '../user-table-row';
-import UserTableHead from '../user-table-head';
-import TableEmptyRows from '../table-empty-rows';
-import UserTableToolbar from '../user-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
+  const obj = {
+    Name: 'Ayush Kumar Rai',
+    Gender: 'Male',
+    Birthyear: 2001,
+    Uid: '2925-6819-5787',
+  };
+  const [stream, setStream] = useState(null);
+  const [name, setName] = useState('');
+  const [date, setDate] = useState('');
+  const [uid, setUid] = useState('');
+  const [cameraOpen, setCameraOpen] = useState(false);
 
-// ----------------------------------------------------------------------
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({ name, date, uid });
+  };
 
-export default function UserPage() {
-  const [page, setPage] = useState(0);
-
-  const [order, setOrder] = useState('asc');
-
-  const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
-
-  const [filterName, setFilterName] = useState('');
-
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleSort = (event, id) => {
-    const isAsc = orderBy === id && order === 'asc';
-    if (id !== '') {
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(id);
+  const openCamera = async () => {
+    try {
+      const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setStream(userMediaStream);
+      setCameraOpen(true);
+    } catch (err) {
+      console.error('Error accessing camera:', err);
     }
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
+  const closeCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+      setCameraOpen(false);
     }
-    setSelected([]);
   };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setPage(0);
-    setRowsPerPage(parseInt(event.target.value, 10));
-  };
-
-  const handleFilterByName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
-
-  const dataFiltered = applyFilter({
-    inputData: users,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });
-
-  const notFound = !dataFiltered.length && !!filterName;
+  const generateDelay = (index) => `${index * 2}s`;
 
   return (
-    <></>
-    // <Container>
-    //   <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-    //     <Typography variant="h4">Users</Typography>
-
-    //     <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-    //       New User
-    //     </Button>
-    //   </Stack>
-
-    //   <Card>
-    //     <UserTableToolbar
-    //       numSelected={selected.length}
-    //       filterName={filterName}
-    //       onFilterName={handleFilterByName}
-    //     />
-
-    //     <Scrollbar>
-    //       <TableContainer sx={{ overflow: 'unset' }}>
-    //         <Table sx={{ minWidth: 800 }}>
-    //           <UserTableHead
-    //             order={order}
-    //             orderBy={orderBy}
-    //             rowCount={users.length}
-    //             numSelected={selected.length}
-    //             onRequestSort={handleSort}
-    //             onSelectAllClick={handleSelectAllClick}
-    //             headLabel={[
-    //               { id: 'name', label: 'Name' },
-    //               { id: 'company', label: 'Company' },
-    //               { id: 'role', label: 'Role' },
-    //               { id: 'isVerified', label: 'Verified', align: 'center' },
-    //               { id: 'status', label: 'Status' },
-    //               { id: '' },
-    //             ]}
-    //           />
-    //           <TableBody>
-    //             {dataFiltered
-    //               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    //               .map((row) => (
-    //                 <UserTableRow
-    //                   key={row.id}
-    //                   name={row.name}
-    //                   role={row.role}
-    //                   status={row.status}
-    //                   company={row.company}
-    //                   avatarUrl={row.avatarUrl}
-    //                   isVerified={row.isVerified}
-    //                   selected={selected.indexOf(row.name) !== -1}
-    //                   handleClick={(event) => handleClick(event, row.name)}
-    //                 />
-    //               ))}
-
-    //             <TableEmptyRows
-    //               height={77}
-    //               emptyRows={emptyRows(page, rowsPerPage, users.length)}
-    //             />
-
-    //             {notFound && <TableNoData query={filterName} />}
-    //           </TableBody>
-    //         </Table>
-    //       </TableContainer>
-    //     </Scrollbar>
-
-    //     <TablePagination
-    //       page={page}
-    //       component="div"
-    //       count={users.length}
-    //       rowsPerPage={rowsPerPage}
-    //       onPageChange={handleChangePage}
-    //       rowsPerPageOptions={[5, 10, 25]}
-    //       onRowsPerPageChange={handleChangeRowsPerPage}
-    //     />
-    //   </Card>
-    // </Container>
+    <Container style={{ overflowX: 'hidden' }}>
+      <h1>PAN CARD SCANNING</h1>
+      <div
+        style={{
+          width: '120%',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+          {!cameraOpen && (
+            <button
+              type="button"
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                backgroundColor: '#007bff',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}
+              onClick={openCamera}
+            >
+              Open Camera
+            </button>
+          )}
+          {stream && (
+            <div style={{ marginTop: '20px' }}>
+              <video
+                autoPlay
+                style={{
+                  width: '100%',
+                  maxWidth: '600px',
+                  border: '1px solid #ddd',
+                  borderRadius: '5px',
+                }}
+                ref={(video) => {
+                  if (video) video.srcObject = stream;
+                }}
+              />
+              <button
+                type="button"
+                style={{
+                  marginTop: '10px',
+                  padding: '10px 20px',
+                  fontSize: '16px',
+                  backgroundColor: '#dc3545',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                }}
+                onClick={closeCamera}
+              >
+                Close Camera
+              </button>
+            </div>
+          )}
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            marginTop: '10%',
+            display: cameraOpen ? 'block' : 'none',
+            flexDirection: 'column',
+            gap: '100px',
+          }}
+        >
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={12}>
+              <label htmlFor="">Name</label> <br />
+              <div className={`inputs ${isAnimated ? 'animate-text' : ''}`}>
+                {obj.Name &&
+                  obj.Name.split('').map((letter, index) => (
+                    <span key={index} style={{ animationDelay: generateDelay(index) }}>
+                      {letter}
+                    </span>
+                  ))}
+              </div>
+              {/* <textarea
+                fullWidth
+                label="Name"
+                variant="outlined"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              /> */}
+            </Grid>
+            <Grid item xs={12}>
+              <label htmlFor="">Gender</label> <br />
+              <div className={`inputs ${isAnimated ? 'animate-text' : ''}`}>
+                {obj.Gender &&
+                  obj.Gender.split('').map((letter, index) => (
+                    <span key={index} style={{ animationDelay: generateDelay(index) }}>
+                      {letter}
+                    </span>
+                  ))}
+              </div>
+              {/* <textarea
+                  fullWidth
+                  label="UID"
+                  variant="outlined"
+                  value={uid}
+                  onChange={(e) => setUid(e.target.value)}
+                /> */}
+            </Grid>
+            <Grid item xs={12}>
+              <label htmlFor="">D.O.B</label> <br />
+              <div className={`inputs ${isAnimated ? 'animate-text' : ''}`}>{obj.Birthyear}</div>
+              {/* <textarea
+                fullWidth
+                label="Date"
+                variant="outlined"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              /> */}
+            </Grid>
+            <Grid item xs={12}>
+              <label htmlFor="">ID</label> <br />
+              <div className={`inputs ${isAnimated ? 'animate-text' : ''}`}>
+                {obj.Uid &&
+                  obj.Uid.split('').map((letter, index) => (
+                    <span key={index} style={{ animationDelay: generateDelay(index) }}>
+                      {letter}
+                    </span>
+                  ))}
+              </div>
+              {/* <textarea
+                fullWidth
+                label="UID"
+                variant="outlined"
+                value={uid}
+                onChange={(e) => setUid(e.target.value)}
+              /> */}
+            </Grid>
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" color="primary">
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </Container>
   );
 }
